@@ -1,45 +1,70 @@
-from kivy.app import App
-from kivy.uix.button import Button
-from kivy.uix.boxlayout import BoxLayout
-from kivy.uix.textinput import TextInput
+'''
+Напряжение холста
+=============
+В этом примере проверяется производительность нашего графического движка путем рисования больших размеров
+количество маленьких квадратов. Вы должны увидеть черный холст с кнопками и
+внизу. Нажатие кнопок добавляет небольшие цветные квадраты к
+холст.
+'''
+
+из кивы. uix. кнопка импорт кнопка
+из кивы. uix. виджет импорт виджет
+из кивы. uix. этикетка импорт Этикетка
+из кивы. uix. boxlayout импорт BoxLayout
+из кивы. Приложение для импорта приложений 
+из кивы. импорт графики Цвет, Прямоугольник
+из случайного импорта случайным как r
+из functools импорт частичный
 
 
-class MainApp(App):
-    def build(self):
-        main_layout = BoxLayout(orientation="vertical", padding=10, spacing=10)
-        self.solution = TextInput(multiline=False, readonly=False, halign="right", font_size=55)
-        main_layout.add_widget(self.solution)
-        buttons = [
-            ["7", "8", "9", "/"],
-            ["4", "5", "6", "*"],
-            ["1", "2", "3", "-"],
-            [".", "0", "C", "+"],
-        ]
-        for row in buttons:
-            h_layout = BoxLayout()
-            for label in row:
-                button = Button(text=label, pos_hint={"center_x": 0.5, "center_y": 0.5})
-                button.bind(on_press=self.on_button_press)
-                h_layout.add_widget(button)
-            main_layout.add_widget(h_layout)
+класс StressCanvasApp(Приложение):
 
-        equals = Button(text='=', pos_hint={"center_x":0.5, "center_y":0.5})
-        equals.bind(on_press=self.tab)
-        main_layout.add_widget(equals)
+    def add_rects(self, label, wid, count, *largs):
+        этикетка. text = str(int(label. текст) + количество)
+        с wid . холст:
+            для x в диапазоне(количество):
+                Цвет(r(), 1, 1, режим='hsv')
+                Прямоугольник(pos=(r() * wid. ширина + ширина . х,
+                               r() * wid. высота + wid. y), размер=(20, 20))
 
-        return main_layout
+    def double_rects(само, метка, wid, *ларги):
+        count = int(метка. текст)
+        себя. add_rects(этикетка, wid, количество, *ларги)
 
-    def on_button_press(self, instance):
-        if instance.text == "C":
-            self.solution.text = ""
-        else:
-            self.solution.text += instance.text
+    def reset_rects(само, этикетка, wid, *largs):
+        этикетка. текст = '0'
+        wid. холст. очистить()
 
-    def tab(self, instance):
-        if self.solution.text:
-            try:
-                self.solution.text = str(eval(self.solution.text))
-            except:
-                self.solution.text = 'Error'
+    def сборка(самостоятельная):
+        wid = Виджет()
 
-MainApp().run()
+        label = Label(текст='0')
+
+        btn_add100 = Кнопка(текст='+ 100 rects',
+                            on_press=частичная(самость. add_rects, этикетка, wid, 100))
+
+        btn_add500 = Кнопка(текст='+ 500 rects',
+                            on_press=частичная(самость. add_rects, этикетка, wid, 500))
+
+        btn_double = Кнопка(текст='x 2',
+                            on_press=частичная(самость. double_rects, этикетка, wid))
+
+        btn_reset = Кнопка(текст='Сброс',
+                           on_press=частичная(самость. reset_rects, этикетка, wid))
+
+        макет = BoxLayout(size_hint=(1, Нет), высота=50)
+        макет. add_widget(btn_add100)
+        макет. add_widget(btn_add500)
+        макет. add_widget(btn_double)
+        макет. add_widget(btn_reset)
+        макет. add_widget(этикетка)
+
+        root = BoxLayout(ориентация='вертикальный')
+        корень. add_widget(wid)
+        корень. add_widget(макет)
+
+        вернуть корень
+
+
+если __name__ == '__main__':
+    Приложение «СтрессКанвас»(). запустить()
